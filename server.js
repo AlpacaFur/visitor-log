@@ -44,7 +44,6 @@ setInterval(saveToFile, 15 * 60 * 1000) // Autosave every 15 mins
 setInterval(checkPrune, 5 * 60 * 1000) // Check to see if it's time for a reset every 5 mins
 
 function checkPrune() {
-  console.log("gamer time");
   let currentDate = new Date();
   let msDate = currentDate.getTime()
   if (currentDate.getHours() !== 0) return;
