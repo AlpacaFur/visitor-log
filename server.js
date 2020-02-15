@@ -48,11 +48,11 @@ function checkPrune() {
   let msDate = currentDate.getTime()
   if (currentDate.getHours() !== 0) return;
   let args = [false, false, false] // resets [daily, weekly, monthly]
-  if (msDate - data.last_reset.day >= 2 * 60 * 60 * 1000) args[0] = true;
+  if (msDate - data.last_reset.day > 2 * 60 * 60 * 1000) args[0] = true;
   if (currentDate.getDay() === 1 &&
-      msDate - data.last_reset.week >= 2 * 24 * 60 * 60 * 1000) args[1] = true;
+      msDate - data.last_reset.week > 2 * 24 * 60 * 60 * 1000) args[1] = true;
   if (currentDate.getDate() === 1 &&
-      msDate - data.last_reset.month >= 2 * 24 * 60 * 60 * 1000) args[2] = true;
+      msDate - data.last_reset.month > 2 * 24 * 60 * 60 * 1000) args[2] = true;
   if (args.includes(true)) {
     console.log(`Resetting [day: ${args[0]}, week: ${args[1]}, month: ${args[2]}] at ${currentDate}`);
     prune(...args);
@@ -66,9 +66,18 @@ function prune(daily, weekly, monthly) {
     if (monthly) data.pages[key].monthly_users = 0;
   })
   let timeStamp = new Date().getTime()
-  if (daily) data.last_reset.day = timeStamp;
-  if (weekly) data.last_reset.week = timeStamp;
-  if (monthly) data.last_reset.month = timeStamp;
+  if (daily) {
+    data.last_reset.day = timeStamp;
+    data.total_daily_users = 0;
+  }
+  if (weekly) {
+    data.last_reset.week = timeStamp;
+    data.total_weekly_users = 0;
+  }
+  if (monthly) {
+    data.last_reset.month = timeStamp;
+    data.total_monthly_users = 0;
+  }
 }
 
 const server = http.createServer((req, res)=>{
